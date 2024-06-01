@@ -14,26 +14,26 @@ public class TesteProdutoCadastrar {
 
         Categoria categoria1 = new Categoria();
 
-        categoria1 = categoriaDAO.buscaPorId(1l);
+        categoria1 = categoriaDAO.buscaPorId(2l);
 
         Produto produto1 = new Produto(
-                "Samsung A1000"
+                "Produto 65654"
                 , "10Gb de memória"
-                , 1230.99
+                , 12360.99
                 , 120
                 , categoria1);
 
         Produto produto2 = new Produto(
-                "Motorola XV"
+                "Motorola HGHGH"
                 , "1000Gb de memória"
-                , 1530.99
-                , 0
+                , 530.99
+                , 20
                 , categoria1);
 
         Produto produto3 = new Produto(
-                "Xiomi Zeta"
+                "Alicate Zeta"
                 , "Entrada para 4 chips"
-                , 2331.89
+                , 23.89
                 , 70
                 , categoria1);
 

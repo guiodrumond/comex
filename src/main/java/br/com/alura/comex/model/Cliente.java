@@ -11,13 +11,13 @@ public class Cliente {
     private Long id;
     @Column(name = "nome", length = 120, nullable = false)
     private String nome;
-    @Column(name = "cpf", length = 15, nullable = false)
+    @Column(name = "cpf", length = 20, nullable = false)
     private String cpf;
     @Column(name = "email", length = 120, nullable = false)
     private String email;
     @Column(name = "profissao", length = 120, nullable = true)
     private String profissao;
-    @Column(name = "telefone", length = 12, nullable = true)
+    @Column(name = "telefone", length = 20, nullable = true)
     private String telefone;
     @Embedded
     private Endereco endereco;

@@ -1,6 +1,8 @@
 package br.com.alura.comex.model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "categoria")
@@ -13,6 +15,9 @@ public class Categoria {
     private String nome;
     @Column(name = "ativa", length = 1, nullable = false)
     private Boolean ativa;
+
+    @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Produto> produtos;
 
     public Categoria() {
     }

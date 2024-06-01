@@ -12,8 +12,11 @@ public class ItemDePedido {
     private Long id;
     @OneToOne
     private Produto produto;
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "pedido_id", nullable = false)
     private Pedido pedido;
+
     @Column(name = "preco_unitario", nullable = false)
     private BigDecimal precoUnitario;
     @Column(name = "quantidade", nullable = false)
@@ -26,12 +29,14 @@ public class ItemDePedido {
     public ItemDePedido() {
     }
 
-    public ItemDePedido(Produto produto, Pedido pedido, BigDecimal precoUnitario, Integer quantidade) {
+    public ItemDePedido(Produto produto, Pedido pedido, Integer quantidade) {
         this.produto = produto;
         this.pedido = pedido;
         this.precoUnitario = produto.getPrecoUnitario();
         this.quantidade = quantidade;
     }
+
+
 
     public Produto getProduto() {
         return produto;
@@ -85,4 +90,15 @@ public class ItemDePedido {
         return this.precoUnitario.multiply(BigDecimal.valueOf(this.quantidade)).multiply((BigDecimal.ONE.subtract(this.desconto)));
     }
 
+    @Override
+    public String toString() {
+        return "ItemDePedido{" +
+                "id=" + id +
+                ", produto=" + produto +
+                ", precoUnitario=" + precoUnitario +
+                ", quantidade=" + quantidade +
+                ", desconto=" + desconto +
+                ", tipoDesconto=" + tipoDesconto +
+                '}';
+    }
 }

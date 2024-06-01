@@ -5,6 +5,7 @@ import br.com.alura.comex.model.Cliente;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import java.math.BigDecimal;
 import java.util.List;
 
 public class ClienteDao {
@@ -65,4 +66,35 @@ public class ClienteDao {
     }
 
 
+    public void listarClientesFieis() {
+
+        EntityManager entityManager = JPAUtil.getEntityManager();
+
+        TypedQuery<Object[]> query = entityManager.createQuery(
+                "SELECT c.nome, COUNT(p), SUM(i.precoUnitario * i.quantidade) " +
+                        "FROM Cliente c " +
+                        "JOIN Pedido p ON c = p.cliente " +
+                        "JOIN ItemDePedido i ON p = i.pedido " +
+                        "GROUP BY c.nome " +
+                        "ORDER BY SUM(i.precoUnitario * i.quantidade) DESC", Object[].class)
+                .setMaxResults(3);;
+
+        List<Object[]> resultados = query.getResultList();
+
+        System.out.println("---------------------------------------------");
+        System.out.println("Relatório de clientes fiéis");
+        System.out.println("---------------------------------------------");
+
+        for (Object[] resultado : resultados) {
+            String nomeCliente = (String) resultado[0];
+            Long numeroDePedidos = (Long) resultado[1];
+            BigDecimal valorComprado = (BigDecimal) resultado[2];
+
+            System.out.println("Categoria: " + nomeCliente);
+            System.out.println("Número de pedidos: " + numeroDePedidos);
+            System.out.println("Valor comprado: " + valorComprado);
+            System.out.println("---------------------------------------------");
+        }
+
+    }
 }

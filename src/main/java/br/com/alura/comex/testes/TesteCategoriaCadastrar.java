@@ -6,9 +6,9 @@ import br.com.alura.comex.model.Categoria;
 public class TesteCategoriaCadastrar {
 
     public static void main(String[] args) {
-        Categoria categoriaCelular = new Categoria("CELULAR", true);
-        Categoria categoriaLivro = new Categoria("LIVRO", true);
-        Categoria categoriaBrinquedos = new Categoria("BRINQUEDO", false);
+        Categoria categoriaCelular = new Categoria("FERRAMENTAS", true);
+        Categoria categoriaLivro = new Categoria("JOGOS", true);
+        Categoria categoriaBrinquedos = new Categoria("JARDINAGEM", false);
 
         CategoriaDao categoriaDAO = new CategoriaDao();
 

@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -14,23 +15,36 @@ public class Pedido {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "data_do_pedido", nullable = false)
+
+    @Column(name = "data_do_pedido", nullable = false, updatable = false)
     private LocalDate data;
+
     @ManyToOne
     @JoinColumn(name = "cliente_id", nullable = false)
     private Cliente cliente;
 
-    ArrayList<String> itemsDePedidos = new ArrayList<>();
-
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
-    private List<ItemDePedido> itensDePedido = new ArrayList<>();
+    private List<ItemDePedido> itensDePedidos = new ArrayList<>();
 
     @Column(name = "desconto", length = 20, nullable = true)
     private BigDecimal desconto;
     @Column(name = "fidelidade", length = 1, nullable = true)
     private Boolean fidelidade;
 
+    @PrePersist
+    public void prePersist() {
+        this.data = LocalDate.now();
+    }
+
     public Pedido() {
+    }
+
+    public List<ItemDePedido> getItensDePedidos() {
+        return itensDePedidos;
+    }
+
+    public void setItensDePedidos(List<ItemDePedido> itensDePedidos) {
+        this.itensDePedidos = itensDePedidos;
     }
 
     public Long getId() {
@@ -84,4 +98,28 @@ public class Pedido {
     public void setFidelidade(Boolean fidelidade) {
         this.fidelidade = fidelidade;
     }
+
+    @Override
+    public String toString() {
+        return "Pedido{" +
+                "id=" + id +
+                ", data=" + data +
+                ", cliente=" + cliente +
+                ", itensDePedidos=" + itensDePedidos +
+                ", desconto=" + desconto +
+                ", fidelidade=" + fidelidade +
+                '}';
+    }
+
+    public BigDecimal getPrecoTotal() {
+
+        List<ItemDePedido> itensDePedido = this.getItensDePedidos();
+
+        BigDecimal precoTotal = itensDePedido.stream()
+                .map(i -> i.getPrecoUnitario().multiply(BigDecimal.valueOf(i.getQuantidade())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        return precoTotal;
+    }
+
 }

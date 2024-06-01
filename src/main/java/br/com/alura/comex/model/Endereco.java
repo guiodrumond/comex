@@ -30,7 +30,13 @@ public class Endereco {
         this.numero = numero;
     }
 
+    public String getLogradouro() {
+        return logradouro;
+    }
 
+    public void setLogradouro(String logradouro) {
+        this.logradouro = logradouro;
+    }
 
     public String getBairro() {
         return bairro;
