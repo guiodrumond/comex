@@ -1,13 +1,12 @@
 package br.com.alura.comex.testes;
 
-import br.com.alura.comex.JPAUtil;
-import br.com.alura.comex.dao.CategoriaDao;
 import br.com.alura.comex.model.*;
+import br.com.alura.comex.service.CategoriaService;
+import br.com.alura.comex.service.ClienteService;
+import br.com.alura.comex.service.PedidoService;
+import br.com.alura.comex.service.ProdutoService;
 
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -15,9 +14,11 @@ public class GeracaoDeDadosParaTabelas {
 
     public static void main(String[] args) {
 
-        EntityManager entityManager = JPAUtil.getEntityManager();
+        ClienteService clienteService = new ClienteService();
+        CategoriaService categoriaService = new CategoriaService();
+        ProdutoService produtoService = new ProdutoService();
+        PedidoService pedidoService = new PedidoService();
 
-        entityManager.getTransaction().begin();
 
         for (int i = 1; i <= 6; i++) {
             Cliente cliente = new Cliente();
@@ -36,7 +37,7 @@ public class GeracaoDeDadosParaTabelas {
 
             cliente.setEndereco(endereco);
 
-            entityManager.persist(cliente);
+            clienteService.cadastrar(cliente);
         }
 
         for (int i = 1; i <= 6; i++) {
@@ -44,7 +45,7 @@ public class GeracaoDeDadosParaTabelas {
             categoria.setNome("Categoria " + i);
             categoria.setAtiva(true);
 
-            entityManager.persist(categoria);
+            categoriaService.cadastrar(categoria);
         }
 
 
@@ -58,18 +59,14 @@ public class GeracaoDeDadosParaTabelas {
             produto.setPrecoUnitario(BigDecimal.valueOf(random.nextDouble() * (1000.00 - 0.01)));
             produto.setQuantidade(random.nextInt(500) + 1);
 
-            List<Categoria> listaDeCategorias;
-
-            TypedQuery<Categoria> query = entityManager.createQuery("SELECT c FROM Categoria c", Categoria.class);
-
-            listaDeCategorias = query.getResultList();
+            List<Categoria> listaDeCategorias = categoriaService.buscarTodas();
 
             int indiceSorteado = random.nextInt(listaDeCategorias.size());
             Categoria categoriaSorteada = listaDeCategorias.get(indiceSorteado);
 
             produto.setCategoria(categoriaSorteada);
 
-            entityManager.persist(produto);
+            produtoService.cadastrar(produto);
         }
 
 
@@ -80,9 +77,7 @@ public class GeracaoDeDadosParaTabelas {
 
             pedido = new Pedido();
 
-            List<Cliente> listaDeClientes;
-            TypedQuery<Cliente> query = entityManager.createQuery("SELECT c FROM Cliente c", Cliente.class);
-            listaDeClientes = query.getResultList();
+            List<Cliente> listaDeClientes = clienteService.buscarTodos();
 
             int indiceSorteado = random.nextInt(listaDeClientes.size());
             Cliente clienteSorteado = listaDeClientes.get(indiceSorteado);
@@ -91,13 +86,11 @@ public class GeracaoDeDadosParaTabelas {
             pedido.setFidelidade(false);
             pedido.setDesconto(BigDecimal.ZERO);
 
-            entityManager.persist(pedido);
+            pedidoService.cadastrar(pedido);
 
         }
 
-        List<Pedido> listaDePedidos;
-        TypedQuery<Pedido> query = entityManager.createQuery("SELECT p FROM Pedido p", Pedido.class);
-        listaDePedidos = query.getResultList();
+        List<Pedido> listaDePedidos = pedidoService.buscarTodos();
 
         for (int i = 0; i < listaDePedidos.size(); i++) {
 
@@ -110,9 +103,7 @@ public class GeracaoDeDadosParaTabelas {
 
                 itemDePedido.setPedido(listaDePedidos.get(p));
 
-                List<Produto> listaDeProdutos;
-                TypedQuery<Produto> novaQuery = entityManager.createQuery("SELECT c FROM Produto c", Produto.class);
-                listaDeProdutos = novaQuery.getResultList();
+                List<Produto> listaDeProdutos = produtoService.buscarTodos();
 
                 int indiceSorteado = random.nextInt(listaDeProdutos.size());
                 Produto produtoSorteado = listaDeProdutos.get(indiceSorteado);
@@ -127,16 +118,11 @@ public class GeracaoDeDadosParaTabelas {
 
                 itemDePedido.setPrecoUnitario(itemDePedido.getProduto().getPrecoUnitario());
 
-                entityManager.persist(itemDePedido);
+                pedidoService.cadastrarItemDePedido(itemDePedido);
             }
 
         }
 
-        entityManager.getTransaction().commit();
-
     }
-
-
-
 
 }
