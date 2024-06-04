@@ -5,6 +5,7 @@ import br.com.alura.comex_nova_versao.service.ProdutoService;
 import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 public record ItemDePedidoRequest(
         Long pedidoId,
@@ -16,19 +17,21 @@ public record ItemDePedidoRequest(
 
     public ItemDePedido toEntity(ProdutoService produtoService, PedidoService pedidoService) {
 
-        Produto produto = produtoService.BuscarProdutoPorId(produtoId);
+        Optional<Produto> produto = produtoService.buscarProdutoPorId(produtoId);
 
-        Pedido pedido = pedidoService.BuscarPedidoPorId(pedidoId);
+
+
+        Pedido pedido = pedidoService.buscarPedidoPorId(pedidoId);
 
         ItemDePedido itemDePedido = new ItemDePedido();
 
         itemDePedido.setProduto(produto);
         itemDePedido.setPedido(pedido);
-        itemDePedido.setPrecoUnitario(produto.getPrecoUnitario());
+        itemDePedido.setPrecoUnitario(produto.get().getPrecoUnitario());
         itemDePedido.setQuantidade(quantidade);
         itemDePedido.setDesconto(desconto);
         itemDePedido.setTipoDesconto(tipoDesconto);
-        itemDePedido.setTotal(produto.getPrecoUnitario().multiply(BigDecimal.valueOf(quantidade)));
+        itemDePedido.setTotal(produto.get().getPrecoUnitario().multiply(BigDecimal.valueOf(quantidade)));
 
         return itemDePedido;
     }

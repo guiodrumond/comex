@@ -30,10 +30,14 @@ public class ProdutoService {
         return listaProdutos;
     };
 
-    public Produto BuscarProdutoPorId(Long produtoId) {
+    public Optional<Produto> buscarProdutoPorId(Long produtoId) {
 
-        return repository.findById(produtoId).get();
+        return Optional.of(repository.findById(produtoId).get());
 
     }
+
+    public Integer quantidadeEmEstoque(Long produtoId) {
+        return repository.findById(produtoId).get().getQuantidade();
+    };
 
 }

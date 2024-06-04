@@ -1,6 +1,5 @@
 package br.com.alura.comex_nova_versao.service;
 
-import br.com.alura.comex_nova_versao.model.Categoria;
 import br.com.alura.comex_nova_versao.model.ItemDePedido;
 import br.com.alura.comex_nova_versao.model.Pedido;
 import br.com.alura.comex_nova_versao.repository.ItemDePedidoRepository;
@@ -28,7 +27,7 @@ public class PedidoService {
 
     }
 
-    public Pedido BuscarPedidoPorId(Long pedidoId) {
+    public Pedido buscarPedidoPorId(Long pedidoId) {
 
         return pedidoRepository.findById(pedidoId).get();
 
@@ -42,5 +41,16 @@ public class PedidoService {
 
     public Optional<Pedido> buscarPorId(Long pedidoId) {
         return pedidoRepository.findById(pedidoId);
+    }
+
+    public int getNumeroDePedidos(Long id) {
+        return pedidoRepository.countByClienteId(id);
+    }
+
+    public void adicionarItemAoPedido(ItemDePedido item) {
+        Pedido pedido = buscarPedidoPorId(item.getPedido().getId());
+
+        pedido.getItensDePedido().add(item);
+
     }
 }

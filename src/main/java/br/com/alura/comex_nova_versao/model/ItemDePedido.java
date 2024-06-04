@@ -3,6 +3,7 @@ package br.com.alura.comex_nova_versao.model;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 @Entity
 @Table(name = "item_de_pedido")
@@ -41,17 +42,24 @@ public class ItemDePedido {
     public ItemDePedido(Integer quantidade, Produto produto) {
         this.quantidade = quantidade;
         this.produto = produto;
-        this.desconto = BigDecimal.ZERO;
-        this.tipoDesconto = TipoDescontoItemPedido.NENHUM;
         this.precoUnitario = produto.getPrecoUnitario();
+
+        if (quantidade >= 10) {
+            this.tipoDesconto = TipoDescontoItemPedido.QUANTIDADE;
+            this.desconto = new BigDecimal("0.10"); // 10%
+        } else {
+            this.tipoDesconto = TipoDescontoItemPedido.NENHUM;
+            this.desconto = BigDecimal.ZERO;
+        }
     }
 
     public Produto getProduto() {
         return produto;
     }
 
-    public void setProduto(Produto produto) {
-        this.produto = produto;
+    public void setProduto(Optional<Produto> produto) {
+        if (produto.isPresent()) {
+        this.produto = produto.get();}
     }
 
     public Pedido getPedido() {
@@ -100,5 +108,13 @@ public class ItemDePedido {
 
     public void setTotal(BigDecimal total) {
         this.total = total;
+    }
+
+    public void setProduto(Produto produto) {
+        this.produto = produto;
+    }
+
+    public Long getProdutoId() {
+        return this.produto.getId();
     }
 }

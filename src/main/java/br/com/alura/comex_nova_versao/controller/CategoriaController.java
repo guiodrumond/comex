@@ -1,6 +1,7 @@
 package br.com.alura.comex_nova_versao.controller;
 
 import br.com.alura.comex_nova_versao.model.*;
+import br.com.alura.comex_nova_versao.relatorios.VendasPorCategoriaDTO;
 import br.com.alura.comex_nova_versao.service.CategoriaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,7 +74,7 @@ public class CategoriaController {
     public ResponseEntity<Object> removePorId(@PathVariable("id") Long categoriaId) {
         Optional<Categoria> categoria = service.buscarPorId(categoriaId);
         if (categoria.isPresent()) {
-            service.remover(categoriaId); // Supondo que você tenha um método "remover" no seu service
+            service.remover(categoriaId);
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.notFound().build();
@@ -106,6 +107,11 @@ public class CategoriaController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/vendas")
+    public ResponseEntity<List<VendasPorCategoriaDTO>> vendasPorCategoria() {
+        return service.vendasPorCategoria();
     }
 
 }

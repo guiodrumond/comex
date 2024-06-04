@@ -4,6 +4,7 @@ import br.com.alura.comex_nova_versao.service.ClienteService;
 import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 public record PedidoRequest(
         @NotNull Long clienteId,
@@ -14,11 +15,11 @@ public record PedidoRequest(
 
     public Pedido toEntity(ClienteService clienteService) throws IllegalArgumentException {
 
-        Cliente cliente = clienteService.buscarClientePorId(clienteId);
+        Optional<Cliente> cliente = clienteService.buscarClientePorId(clienteId);
 
         TipoDescontoPedido tipoDescontoEnum = converterStringParaEnum(tipoDesconto);
 
-        return new Pedido(cliente, desconto, tipoDescontoEnum);
+        return new Pedido(cliente.get(), desconto, tipoDescontoEnum);
     }
 
     private TipoDescontoPedido converterStringParaEnum(String tipoDesconto) {
